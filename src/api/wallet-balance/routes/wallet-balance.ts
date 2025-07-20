@@ -11,7 +11,9 @@ export default {
       path: '/wallet-balances/my',
       handler: 'wallet-balance.findMine',
       config: {
-        policies: ['global::isAuthenticated'],
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
     {
@@ -19,7 +21,9 @@ export default {
       path: '/wallet-balances/deposit-address',
       handler: 'wallet-balance.getAddr',
       config: {
-        policies: ['global::isAuthenticated'],
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
   ],
