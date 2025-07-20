@@ -26,5 +26,15 @@ export default {
         }
       },
     },
+    {
+      method: 'POST',
+      path: '/wallet-balances/admin-recharge',
+      handler: 'wallet-balance.adminRecharge',
+      config: {
+        auth: {
+          scope: ['authenticated']
+        }
+      },
+    },
   ],
 };

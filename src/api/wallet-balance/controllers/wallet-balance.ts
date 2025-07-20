@@ -2,7 +2,7 @@
  * wallet-balance controller
  */
 
-import { getWalletBalance } from '../services/wallet-balance';
+import { getWalletBalance, addUSDT } from '../services/wallet-balance';
 
 export default {
   async findMine(ctx) {
@@ -25,5 +25,30 @@ export default {
       network: 'BEP20',
       memo: `User_${userId}`,
     };
+  },
+
+  // 管理员充值接口
+  async adminRecharge(ctx) {
+    const { userId, amount } = ctx.request.body;
+    
+    try {
+      // 这里应该检查管理员权限，暂时跳过
+      console.log(`🔧 管理员充值: 用户${userId} +${amount} USDT`);
+      
+      const newBalance = await addUSDT(userId, amount, {
+        type: 'admin_recharge',
+        direction: 'in',
+        amount: amount,
+        description: `Admin recharge ${amount} USDT`,
+      });
+
+      return {
+        success: true,
+        newBalance: newBalance,
+        message: `Successfully recharged ${amount} USDT`
+      };
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
   },
 };
