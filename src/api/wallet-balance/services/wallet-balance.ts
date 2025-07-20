@@ -3,7 +3,7 @@
  */
 
 import Decimal from 'decimal.js';
-import { TxType, Direction, TxTypeType, DirectionType } from '../../../../shared/enums';
+import { TxType, Direction, TxTypeType, DirectionType } from '../../../shared/enums';
 
 interface TxMeta {
   type: TxTypeType;

@@ -3,13 +3,13 @@
  */
 
 import Decimal from 'decimal.js';
-import { OrderState, PlanCode } from '../../../../shared/enums';
+import { OrderState, PlanCode } from '../../../shared/enums';
 import { addUSDT } from '../../wallet-balance/services/wallet-balance';
 
 export async function createOrder(userId: number, planCode: string) {
   // 读取计划
   const plan = await strapi.entityService.findMany('api::subscription-plan.subscription-plan', {
-    filters: { code: planCode } as any,
+    filters: { planCode: planCode } as any,
   });
 
   if (!plan || plan.length === 0) {
@@ -50,7 +50,7 @@ export async function createOrder(userId: number, planCode: string) {
     data: {
       user: userId,
       plan: selectedPlan.id,
-      principal: principal.toNumber(),
+      principalUSDT: principal.toNumber(),
       state: 'active',
       startAt: now,
       endAt: endAt,
@@ -98,18 +98,18 @@ export async function redeemOrder(orderId: number, userId: number) {
 export async function processRedeem(order: any) {
   const plan = order.plan;
   const userId = order.user.id;
-  const principal = new Decimal(order.principal);
+  const principal = new Decimal(order.principalUSDT);
 
   // 计算静态收益
   const staticProfit = principal.times(plan.staticPct / 100);
-  const bonusToken = new Decimal(plan.bonusToken || 0);
+  const bonusToken = new Decimal(plan.tokenBonusPct || 0);
 
   // 给用户添加收益
   await addUSDT(userId, staticProfit, {
     type: 'subscription_redeem',
     direction: 'in',
     amount: staticProfit,
-    description: `Static profit from ${plan.name}`,
+    description: `Static profit from ${plan.planCode}`,
   });
 
   // 添加奖励代币
@@ -119,7 +119,7 @@ export async function processRedeem(order: any) {
     //   type: 'subscription_redeem',
     //   direction: 'in',
     //   amount: bonusToken,
-    //   description: `Bonus token from ${plan.name}`,
+    //   description: `Bonus token from ${plan.planCode}`,
     // });
   }
 
@@ -140,7 +140,7 @@ export async function processRedeem(order: any) {
         referrer: order.user.invitedBy,
         fromUser: userId,
         order: order.id,
-        amount: referralProfit.toNumber(),
+        amountUSDT: referralProfit.toNumber(),
         description: `Referral reward from ${order.user.username}`,
       } as any,
     });
