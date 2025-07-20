@@ -2,16 +2,22 @@ const axios = require('axios');
 
 const BASE_URL = 'http://118.107.4.158:1337';
 
+// 生成随机用户名
+function generateRandomUsername() {
+  return 'roleuser_' + Math.random().toString(36).substring(2, 8);
+}
+
 async function debugUserRole() {
   console.log('🔍 调试用户角色设置...\n');
   console.log(`📍 测试服务器: ${BASE_URL}\n`);
 
   try {
     // 1. 注册用户
+    const username = generateRandomUsername();
     console.log('1. 注册新用户...');
     const registerResponse = await axios.post(`${BASE_URL}/api/auth/invite-register`, {
-      username: 'roleuser',
-      email: 'role@example.com',
+      username: username,
+      email: `${username}@example.com`,
       password: 'password123',
     });
 
