@@ -14,14 +14,23 @@ export default {
       }
     }
 
-    // 创建用户（会触发生命周期）
+    // 获取authenticated角色ID
+    const authenticatedRole = await strapi.entityService.findMany('plugin::users-permissions.role', {
+      filters: { name: 'authenticated' }
+    });
+
+    if (!authenticatedRole || authenticatedRole.length === 0) {
+      return ctx.badRequest('Authenticated role not found');
+    }
+
+    // 创建用户
     const userData = {
       email,
       password,
       username,
       confirmed: true,
       blocked: false,
-      // 移除直接的角色设置，让lifecycle来处理
+      role: authenticatedRole[0].id, // 使用正确的角色ID
     };
 
     try {
@@ -56,6 +65,7 @@ export default {
           email: user.email,
           diamondId: (user as any).diamondId,
           referralCode: (user as any).referralCode,
+          role: 'authenticated', // 直接返回角色名称
         }
       };
     } catch (error) {
