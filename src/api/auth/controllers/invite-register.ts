@@ -21,7 +21,7 @@ export default {
       username,
       confirmed: true,
       blocked: false,
-      role: 1, // authenticated role
+      // 移除直接的角色设置，让lifecycle来处理
     };
 
     try {
