@@ -33,7 +33,7 @@ export default {
       type: 'relation',
       relation: 'oneToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'walletBalance',
+      inversedBy: 'wallet-balance',
     },
   },
 }; 

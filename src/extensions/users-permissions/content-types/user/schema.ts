@@ -73,19 +73,19 @@ export default {
       target: 'plugin::users-permissions.user',
       mappedBy: 'invitedBy',
     },
-    walletBalance: {
+    'wallet-balance': {
       type: 'relation',
       relation: 'oneToOne',
       target: 'api::wallet-balance.wallet-balance',
       mappedBy: 'user',
     },
-    walletTxs: {
+    'wallet-txs': {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::wallet-tx.wallet-tx',
       mappedBy: 'user',
     },
-    subscriptionOrders: {
+    'subscription-orders': {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::subscription-order.subscription-order',

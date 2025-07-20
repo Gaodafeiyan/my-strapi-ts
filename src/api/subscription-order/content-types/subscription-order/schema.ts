@@ -21,7 +21,7 @@ export default {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'subscriptionOrders',
+      inversedBy: 'subscription-orders',
     },
     state: {
       type: 'enumeration',
