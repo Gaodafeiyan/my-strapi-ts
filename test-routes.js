@@ -47,10 +47,10 @@ async function testRoutes() {
     // 测试referral-reward路由
     console.log('\n5. 测试referral-reward路由...');
     try {
-      const response = await axios.get('http://118.107.4.158:1337/api/referral-rewards/mine');
-      console.log('✅ /api/referral-rewards/mine 可用');
+      const response = await axios.get('http://118.107.4.158:1337/api/referral-rewards/my');
+      console.log('✅ /api/referral-rewards/my 可用');
     } catch (error) {
-      console.log('❌ /api/referral-rewards/mine 不可用:', error.response?.status);
+      console.log('❌ /api/referral-rewards/my 不可用:', error.response?.status);
     }
     
     // 测试usdt-withdraw路由

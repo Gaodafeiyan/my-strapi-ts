@@ -11,7 +11,9 @@ export default {
       path: '/wallet-balances/my',
       handler: 'wallet-balance.findMine',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
     {
@@ -19,7 +21,9 @@ export default {
       path: '/wallet-balances/deposit-address',
       handler: 'wallet-balance.getAddr',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
     {
@@ -27,7 +31,9 @@ export default {
       path: '/wallet-balances/admin-recharge',
       handler: 'wallet-balance.adminRecharge',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
   ],

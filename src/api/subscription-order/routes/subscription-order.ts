@@ -11,7 +11,9 @@ export default {
       path: '/subscription-orders',
       handler: 'subscription-order.create',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
     {
@@ -19,7 +21,9 @@ export default {
       path: '/subscription-orders/my',
       handler: 'subscription-order.findMy',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
     {
@@ -27,7 +31,9 @@ export default {
       path: '/subscription-orders/:id/redeem',
       handler: 'subscription-order.redeemManual',
       config: {
-        policies: ['isAuthenticated']
+        auth: {
+          scope: ['authenticated']
+        }
       },
     },
   ],
