@@ -11,13 +11,20 @@ export default {
     draftAndPublish: false,
   },
   attributes: {
+    amountUSDT: { 
+      type: 'decimal', 
+      precision: 40, 
+      scale: 8, 
+      required: true 
+    },
+    /** ↘ 多对一：指向推荐人 */
     referrer: {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'referral-rewards',
-      required: true,
+      inversedBy: 'referralRewards'       // ←*** 一定要和 user 里保持一致 ***
     },
+    /** ↘ 多对一：下级用户 */
     fromUser: {
       type: 'relation',
       relation: 'manyToOne',
@@ -27,11 +34,6 @@ export default {
       type: 'relation',
       relation: 'manyToOne',
       target: 'api::subscription-order.subscription-order',
-    },
-    amountUSDT: {
-      type: 'decimal',
-      required: true,
-      min: 0,
     },
   },
 }; 
