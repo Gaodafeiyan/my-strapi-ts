@@ -94,13 +94,7 @@ export default {
       target: 'api::wallet-tx.wallet-tx',
       mappedBy: 'user',
     },
-    // 推荐奖励关系
-    referralRewards: {
-      type: 'relation',
-      relation: 'oneToMany',
-      target: 'api::referral-reward.referral-reward',
-      mappedBy: 'referrer',
-    },
+
     // 淘金次数
     goldRushCount: {
       type: 'integer',
