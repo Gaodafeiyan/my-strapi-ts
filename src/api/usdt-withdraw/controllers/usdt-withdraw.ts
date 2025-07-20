@@ -10,7 +10,8 @@ export default {
     const userId = ctx.state.user.id;
 
     try {
-      const withdrawAmount = amount;
+      // 确保所有金额都是整数
+      const withdrawAmount = Math.round(amount);
       const fee = 1; // 固定手续费1 USDT
       const totalAmount = withdrawAmount + fee;
 
@@ -33,7 +34,7 @@ export default {
         type: 'usdt_withdraw',
         direction: 'out',
         amount: totalAmount,
-        description: `Withdraw ${amount} USDT to ${address}`,
+        description: `Withdraw ${withdrawAmount} USDT to ${address}`,
       });
 
       // 创建提现记录

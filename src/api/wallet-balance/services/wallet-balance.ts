@@ -26,7 +26,8 @@ export async function addUSDT(userId: number, amt: number, meta: Partial<TxMeta>
   }
 
   const currentWallet = wallet[0];
-  const newBalance = currentWallet.usdtBalance + amt;
+  // 确保所有计算都是整数
+  const newBalance = Math.round(currentWallet.usdtBalance + amt);
 
   // 更新钱包余额
   await strapi.entityService.update('api::wallet-balance.wallet-balance', currentWallet.id, {
@@ -39,7 +40,7 @@ export async function addUSDT(userId: number, amt: number, meta: Partial<TxMeta>
       user: userId,
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
-      amountUSDT: amt,
+      amountUSDT: Math.round(amt), // 确保金额是整数
       Wallet_status: 'success',
       memo: meta.description,
     } as any
@@ -60,7 +61,8 @@ export async function addToken(userId: number, amt: number, meta: Partial<TxMeta
   }
 
   const currentWallet = wallet[0];
-  const newBalance = currentWallet.aiTokenBalance + amt;
+  // 确保所有计算都是整数
+  const newBalance = Math.round(currentWallet.aiTokenBalance + amt);
 
   // 更新钱包余额
   await strapi.entityService.update('api::wallet-balance.wallet-balance', currentWallet.id, {
@@ -73,7 +75,7 @@ export async function addToken(userId: number, amt: number, meta: Partial<TxMeta
       user: userId,
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
-      amountToken: amt,
+      amountToken: Math.round(amt), // 确保金额是整数
       Wallet_status: 'success',
       memo: meta.description,
     } as any

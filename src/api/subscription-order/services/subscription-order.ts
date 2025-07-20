@@ -99,8 +99,9 @@ export async function processRedeem(order: any) {
   const userId = order.user.id;
   const principal = order.principalUSDT;
 
-  // 计算静态收益
-  const staticProfit = principal * (plan.staticPct / 100);
+  // 计算静态收益（使用整数计算，避免浮点数精度问题）
+  // 例如：500 * 6% = 500 * 6 / 100 = 30
+  const staticProfit = Math.round(principal * plan.staticPct / 100);
   const bonusToken = plan.tokenBonusPct || 0;
 
   // 给用户添加收益
@@ -122,9 +123,10 @@ export async function processRedeem(order: any) {
     // });
   }
 
-  // 处理推荐奖励
+  // 处理推荐奖励（使用整数计算）
   if (order.user.invitedBy) {
-    const referralProfit = staticProfit * (plan.referralPct / 100);
+    // 例如：30 * 10% = 30 * 10 / 100 = 3
+    const referralProfit = Math.round(staticProfit * plan.referralPct / 100);
     
     await addUSDT(order.user.invitedBy, referralProfit, {
       type: 'referral_reward',
