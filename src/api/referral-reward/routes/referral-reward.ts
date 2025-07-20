@@ -4,4 +4,15 @@
 
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreRouter('api::referral-reward.referral-reward');
+export default {
+  routes: [
+    {
+      method: 'GET',
+      path: '/referral-rewards/my',
+      handler: 'referral-reward.findMine',
+      config: {
+        policies: ['global::isAuthenticated'],
+      },
+    },
+  ],
+};

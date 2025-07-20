@@ -4,4 +4,23 @@
 
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreRouter('api::wallet-balance.wallet-balance');
+export default {
+  routes: [
+    {
+      method: 'GET',
+      path: '/wallet-balances/my',
+      handler: 'wallet-balance.findMine',
+      config: {
+        policies: ['global::isAuthenticated'],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/wallet-balances/deposit-address',
+      handler: 'wallet-balance.getAddr',
+      config: {
+        policies: ['global::isAuthenticated'],
+      },
+    },
+  ],
+};

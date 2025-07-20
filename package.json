@@ -7,7 +7,9 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@strapi/plugin-users-permissions": "5.18.0",
@@ -30,6 +32,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/minimatch": "^6.0.0"
+    "@types/minimatch": "^6.0.0",
+    "ts-node-dev": "^2.0.0",
+    "vitest": "^3.2.4"
   }
 }
