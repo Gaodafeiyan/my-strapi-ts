@@ -22,7 +22,7 @@ export default {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'referralRewards'       // ←*** 一定要和 user 里保持一致 ***
+      inversedBy: 'myReferralRewards'       // ←*** 更换字段名避免冲突 ***
     },
     /** ↘ 多对一：下级用户 */
     fromUser: {
