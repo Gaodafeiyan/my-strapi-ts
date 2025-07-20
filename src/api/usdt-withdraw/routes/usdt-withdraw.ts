@@ -11,9 +11,7 @@ export default {
       path: '/usdt-withdraws',
       handler: 'usdt-withdraw.create',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
     {
@@ -21,9 +19,7 @@ export default {
       path: '/usdt-withdraws/my',
       handler: 'usdt-withdraw.findMine',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
     {
@@ -31,9 +27,7 @@ export default {
       path: '/usdt-withdraws/:id/confirm',
       handler: 'usdt-withdraw.confirm',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
   ],

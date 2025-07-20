@@ -11,9 +11,7 @@ export default {
       path: '/subscription-orders',
       handler: 'subscription-order.create',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
     {
@@ -21,9 +19,7 @@ export default {
       path: '/subscription-orders/my',
       handler: 'subscription-order.findMy',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
     {
@@ -31,9 +27,7 @@ export default {
       path: '/subscription-orders/:id/redeem',
       handler: 'subscription-order.redeemManual',
       config: {
-        auth: {
-          scope: ['authenticated']
-        }
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
   ],
