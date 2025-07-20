@@ -1,9 +1,10 @@
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:1337';
+const BASE_URL = 'http://118.107.4.158:1337';
 
 async function testPermissions() {
   console.log('🔍 测试API权限...\n');
+  console.log(`📍 测试服务器: ${BASE_URL}\n`);
 
   try {
     // 1. 测试未认证访问
