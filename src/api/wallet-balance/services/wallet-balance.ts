@@ -2,20 +2,19 @@
  * wallet-balance service
  */
 
-import Decimal from 'decimal.js';
 import { TxType, Direction, TxTypeType, DirectionType } from '../../../shared/enums';
 
 interface TxMeta {
   type: TxTypeType;
   direction: DirectionType;
-  amount: Decimal;
+  amount: number;
   orderId?: number;
   withdrawId?: number;
   referralId?: number;
   description?: string;
 }
 
-export async function addUSDT(userId: number, amt: Decimal, meta: Partial<TxMeta>) {
+export async function addUSDT(userId: number, amt: number, meta: Partial<TxMeta>) {
   // 读取当前余额
   const wallet = await strapi.entityService.findMany('api::wallet-balance.wallet-balance', {
     filters: { user: userId } as any,
@@ -27,11 +26,11 @@ export async function addUSDT(userId: number, amt: Decimal, meta: Partial<TxMeta
   }
 
   const currentWallet = wallet[0];
-  const newBalance = new Decimal(currentWallet.usdtBalance).plus(amt);
+  const newBalance = currentWallet.usdtBalance + amt;
 
   // 更新钱包余额
   await strapi.entityService.update('api::wallet-balance.wallet-balance', currentWallet.id, {
-    data: { usdtBalance: newBalance.toNumber() }
+    data: { usdtBalance: newBalance }
   });
 
   // 创建交易记录
@@ -40,7 +39,7 @@ export async function addUSDT(userId: number, amt: Decimal, meta: Partial<TxMeta
       user: userId,
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
-      amountUSDT: amt.toNumber(),
+      amountUSDT: amt,
       Wallet_status: 'success',
       memo: meta.description,
     } as any
@@ -49,7 +48,7 @@ export async function addUSDT(userId: number, amt: Decimal, meta: Partial<TxMeta
   return newBalance;
 }
 
-export async function addToken(userId: number, amt: Decimal, meta: Partial<TxMeta>) {
+export async function addToken(userId: number, amt: number, meta: Partial<TxMeta>) {
   // 读取当前余额
   const wallet = await strapi.entityService.findMany('api::wallet-balance.wallet-balance', {
     filters: { user: userId } as any,
@@ -61,11 +60,11 @@ export async function addToken(userId: number, amt: Decimal, meta: Partial<TxMet
   }
 
   const currentWallet = wallet[0];
-  const newBalance = new Decimal(currentWallet.aiTokenBalance).plus(amt);
+  const newBalance = currentWallet.aiTokenBalance + amt;
 
   // 更新钱包余额
   await strapi.entityService.update('api::wallet-balance.wallet-balance', currentWallet.id, {
-    data: { aiTokenBalance: newBalance.toNumber() }
+    data: { aiTokenBalance: newBalance }
   });
 
   // 创建交易记录
@@ -74,7 +73,7 @@ export async function addToken(userId: number, amt: Decimal, meta: Partial<TxMet
       user: userId,
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
-      amountToken: amt.toNumber(),
+      amountToken: amt,
       Wallet_status: 'success',
       memo: meta.description,
     } as any

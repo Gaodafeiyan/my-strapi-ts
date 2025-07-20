@@ -2,7 +2,6 @@
  * subscription-order service
  */
 
-import Decimal from 'decimal.js';
 import { OrderState, PlanCode } from '../../../shared/enums';
 import { addUSDT } from '../../wallet-balance/services/wallet-balance';
 
@@ -28,14 +27,14 @@ export async function createOrder(userId: number, planCode: string) {
   }
 
   const userWallet = wallet[0];
-  const principal = new Decimal(selectedPlan.principalUSDT);
+  const principal = selectedPlan.principalUSDT;
 
-  if (new Decimal(userWallet.usdtBalance).lessThan(principal)) {
+  if (userWallet.usdtBalance < principal) {
     throw new Error('Insufficient balance');
   }
 
   // 扣除用户余额
-  await addUSDT(userId, principal.negated(), {
+  await addUSDT(userId, -principal, {
     type: 'subscription_buy',
     direction: 'out',
     amount: principal,
@@ -50,7 +49,7 @@ export async function createOrder(userId: number, planCode: string) {
     data: {
       user: userId,
       plan: selectedPlan.id,
-      principalUSDT: principal.toNumber(),
+      principalUSDT: principal,
       state: 'active',
       startAt: now,
       endAt: endAt,
@@ -78,7 +77,7 @@ export async function redeemOrder(orderId: number, userId: number) {
     throw new Error('Order not found');
   }
 
-  if (order.user.id !== userId) {
+  if ((order as any).user.id !== userId) {
     throw new Error('Unauthorized');
   }
 
@@ -98,11 +97,11 @@ export async function redeemOrder(orderId: number, userId: number) {
 export async function processRedeem(order: any) {
   const plan = order.plan;
   const userId = order.user.id;
-  const principal = new Decimal(order.principalUSDT);
+  const principal = order.principalUSDT;
 
   // 计算静态收益
-  const staticProfit = principal.times(plan.staticPct / 100);
-  const bonusToken = new Decimal(plan.tokenBonusPct || 0);
+  const staticProfit = principal * (plan.staticPct / 100);
+  const bonusToken = plan.tokenBonusPct || 0;
 
   // 给用户添加收益
   await addUSDT(userId, staticProfit, {
@@ -113,7 +112,7 @@ export async function processRedeem(order: any) {
   });
 
   // 添加奖励代币
-  if (bonusToken.greaterThan(0)) {
+  if (bonusToken > 0) {
     // 这里需要调用addToken，但我们需要先创建这个函数
     // await addToken(userId, bonusToken, {
     //   type: 'subscription_redeem',
@@ -125,7 +124,7 @@ export async function processRedeem(order: any) {
 
   // 处理推荐奖励
   if (order.user.invitedBy) {
-    const referralProfit = staticProfit.times(plan.referralPct / 100);
+    const referralProfit = staticProfit * (plan.referralPct / 100);
     
     await addUSDT(order.user.invitedBy, referralProfit, {
       type: 'referral_reward',
@@ -140,7 +139,7 @@ export async function processRedeem(order: any) {
         referrer: order.user.invitedBy,
         fromUser: userId,
         order: order.id,
-        amountUSDT: referralProfit.toNumber(),
+        amountUSDT: referralProfit,
         description: `Referral reward from ${order.user.username}`,
       } as any,
     });

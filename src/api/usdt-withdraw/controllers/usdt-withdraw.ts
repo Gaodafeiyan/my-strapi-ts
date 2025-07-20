@@ -2,7 +2,6 @@
  * usdt-withdraw controller
  */
 
-import Decimal from 'decimal.js';
 import { addUSDT } from '../../wallet-balance/services/wallet-balance';
 
 export default {
@@ -11,9 +10,9 @@ export default {
     const userId = ctx.state.user.id;
 
     try {
-      const withdrawAmount = new Decimal(amount);
-      const fee = new Decimal(1); // 固定手续费1 USDT
-      const totalAmount = withdrawAmount.plus(fee);
+      const withdrawAmount = amount;
+      const fee = 1; // 固定手续费1 USDT
+      const totalAmount = withdrawAmount + fee;
 
       // 检查余额
       const wallet = await strapi.entityService.findMany('api::wallet-balance.wallet-balance', {
@@ -25,12 +24,12 @@ export default {
       }
 
       const userWallet = wallet[0];
-      if (new Decimal(userWallet.usdtBalance).lessThan(totalAmount)) {
+      if (userWallet.usdtBalance < totalAmount) {
         return ctx.badRequest('Insufficient balance');
       }
 
       // 扣除余额
-      await addUSDT(userId, totalAmount.negated(), {
+      await addUSDT(userId, -totalAmount, {
         type: 'usdt_withdraw',
         direction: 'out',
         amount: totalAmount,
@@ -41,8 +40,8 @@ export default {
       const withdraw = await strapi.entityService.create('api::usdt-withdraw.usdt-withdraw', {
         data: {
           user: userId,
-          amount: withdrawAmount.toNumber(),
-          fee: fee.toNumber(),
+          amount: withdrawAmount,
+          fee: fee,
           address,
           network,
           status: 'pending',
