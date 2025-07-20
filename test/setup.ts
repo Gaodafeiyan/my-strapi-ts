@@ -6,6 +6,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // 清理资源
-  process.exit(0);
+  // 清理资源，但不强制退出
+  console.log('🧹 测试清理完成');
 }); 

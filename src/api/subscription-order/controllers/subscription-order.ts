@@ -6,6 +6,9 @@ import { createOrder, findMyOrders, redeemOrder } from '../services/subscription
 
 export default {
   async create(ctx) {
+    console.log('🔍 subscription-order.create - 用户信息:', ctx.state.user);
+    console.log('🔍 请求体:', ctx.request.body);
+    
     const { planCode } = ctx.request.body;
     const userId = ctx.state.user.id;
 
@@ -13,6 +16,7 @@ export default {
       const order = await createOrder(userId, planCode);
       return order;
     } catch (error) {
+      console.log('❌ 创建订单失败:', error.message);
       return ctx.badRequest(error.message);
     }
   },
