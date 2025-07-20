@@ -46,5 +46,77 @@ export default {
       inversedBy: 'users',
       configurable: false,
     },
+    // 投资平台扩展字段
+    diamondId: {
+      type: 'uid',
+      required: true,
+      unique: true,
+      minLength: 9,
+      maxLength: 9,
+    },
+    referralCode: {
+      type: 'uid',
+      required: true,
+      unique: true,
+      minLength: 9,
+      maxLength: 9,
+    },
+    invitedBy: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'plugin::users-permissions.user',
+      inversedBy: 'invitees',
+    },
+    invitees: {
+      type: 'relation',
+      relation: 'oneToMany',
+      target: 'plugin::users-permissions.user',
+      mappedBy: 'invitedBy',
+    },
+    // 钱包余额关系
+    walletBalance: {
+      type: 'relation',
+      relation: 'oneToOne',
+      target: 'api::wallet-balance.wallet-balance',
+      mappedBy: 'user',
+    },
+    // 订单关系
+    subscriptionOrders: {
+      type: 'relation',
+      relation: 'oneToMany',
+      target: 'api::subscription-order.subscription-order',
+      mappedBy: 'user',
+    },
+    // 交易记录关系
+    walletTxs: {
+      type: 'relation',
+      relation: 'oneToMany',
+      target: 'api::wallet-tx.wallet-tx',
+      mappedBy: 'user',
+    },
+    // 推荐奖励关系
+    referralRewards: {
+      type: 'relation',
+      relation: 'oneToMany',
+      target: 'api::referral-reward.referral-reward',
+      mappedBy: 'referrer',
+    },
+    // 淘金次数
+    goldRushCount: {
+      type: 'integer',
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    // 已解锁的档位
+    unlockedPlans: {
+      type: 'json',
+      default: [],
+    },
+    // 各档位购买次数统计
+    planPurchaseCounts: {
+      type: 'json',
+      default: {},
+    },
   },
 }; 
