@@ -373,6 +373,275 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiReferralRewardReferralReward
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'referral_rewards';
+  info: {
+    displayName: ' referral-reward';
+    pluralName: 'referral-rewards';
+    singularName: 'referral-reward';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    amountUSDT: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fromOrder: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::subscription-order.subscription-order'
+    >;
+    fromUser: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::referral-reward.referral-reward'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    referrer: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSubscriptionOrderSubscriptionOrder
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'subscription_orders';
+  info: {
+    displayName: 'subscription-order';
+    pluralName: 'subscription-orders';
+    singularName: 'subscription-order';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    cycleDays: Schema.Attribute.Integer & Schema.Attribute.Required;
+    endAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::subscription-order.subscription-order'
+    > &
+      Schema.Attribute.Private;
+    orderNo: Schema.Attribute.UID & Schema.Attribute.Required;
+    plan: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::subscription-plan.subscription-plan'
+    >;
+    principalUSDT: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    referralRewards: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::referral-reward.referral-reward'
+    >;
+    spinQuotaGranted: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    startAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    state: Schema.Attribute.Enumeration<
+      ['draft', 'active', 'due', 'redeemed', ' cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'draft'>;
+    staticYieldUSDT: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    tokenBonusAmount: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiSubscriptionPlanSubscriptionPlan
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'subscription_plans';
+  info: {
+    displayName: 'subscription-plan\u8BA4\u8D2D\u6863\u4F4D';
+    pluralName: 'subscription-plans';
+    singularName: 'subscription-plan';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    boxes: Schema.Attribute.Integer & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    cycle_days: Schema.Attribute.Integer & Schema.Attribute.Required;
+    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::subscription-plan.subscription-plan'
+    > &
+      Schema.Attribute.Private;
+    maxPurchase: Schema.Attribute.Integer & Schema.Attribute.Required;
+    planCode: Schema.Attribute.Enumeration<
+      ['PLAN500', 'PLAN1K', 'PLAN2K', 'PLAN5K']
+    >;
+    principalUSDT: Schema.Attribute.Integer & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    referralPct: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    spinQuota: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<3>;
+    staticPct: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    subscription_order: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::subscription-order.subscription-order'
+    >;
+    tokenBonusPct: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    wallet_txes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wallet-tx.wallet-tx'
+    >;
+  };
+}
+
+export interface ApiUsdtWithdrawUsdtWithdraw
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'usdt_withdraws';
+  info: {
+    displayName: 'usdt-withdraw';
+    pluralName: 'usdt-withdraws';
+    singularName: 'usdt-withdraw';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    amountUSDT: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::usdt-withdraw.usdt-withdraw'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    toAddress: Schema.Attribute.String;
+    txHash: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    usdt_status: Schema.Attribute.Enumeration<
+      ['pending', 'success', 'rejected']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiWalletBalanceWalletBalance
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'wallet_balances';
+  info: {
+    displayName: 'wallet-balance';
+    pluralName: 'wallet-balances';
+    singularName: 'wallet-balance';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aiTokenBalance: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wallet-balance.wallet-balance'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    usdtBalance: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiWalletTxWalletTx extends Struct.CollectionTypeSchema {
+  collectionName: 'wallet_txes';
+  info: {
+    displayName: 'wallet-tx';
+    pluralName: 'wallet-txes';
+    singularName: 'wallet-tx';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    amountToken: Schema.Attribute.Decimal;
+    amountUSDT: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    direction: Schema.Attribute.Enumeration<['in', 'out']> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wallet-tx.wallet-tx'
+    > &
+      Schema.Attribute.Private;
+    memo: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    tx_type: Schema.Attribute.Enumeration<
+      [
+        'deposit',
+        'usdt_withdraw',
+        'subscription_buy',
+        'subscription_redeem',
+        'referral_reward',
+        'lottery_prize',
+      ]
+    > &
+      Schema.Attribute.Required;
+    txHash: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::subscription-plan.subscription-plan'
+    >;
+    Wallet_status: Schema.Attribute.Enumeration<
+      ['pending', 'success', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -828,7 +1097,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -855,10 +1123,22 @@ export interface PluginUsersPermissionsUser
       }>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    referralRewards: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::referral-reward.referral-reward'
+    >;
+    referredRewards: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::referral-reward.referral-reward'
+    >;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    subscriptionOrders: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::subscription-order.subscription-order'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -869,6 +1149,10 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 3;
       }>;
+    withdraws: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::usdt-withdraw.usdt-withdraw'
+    >;
   };
 }
 
@@ -882,6 +1166,12 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::referral-reward.referral-reward': ApiReferralRewardReferralReward;
+      'api::subscription-order.subscription-order': ApiSubscriptionOrderSubscriptionOrder;
+      'api::subscription-plan.subscription-plan': ApiSubscriptionPlanSubscriptionPlan;
+      'api::usdt-withdraw.usdt-withdraw': ApiUsdtWithdrawUsdtWithdraw;
+      'api::wallet-balance.wallet-balance': ApiWalletBalanceWalletBalance;
+      'api::wallet-tx.wallet-tx': ApiWalletTxWalletTx;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

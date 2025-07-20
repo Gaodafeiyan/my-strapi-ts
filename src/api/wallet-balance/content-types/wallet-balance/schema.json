@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wallet_balances",
+  "info": {
+    "singularName": "wallet-balance",
+    "pluralName": "wallet-balances",
+    "displayName": "wallet-balance"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "usdtBalance": {
+      "type": "decimal",
+      "default": 0
+    },
+    "aiTokenBalance": {
+      "type": "decimal",
+      "default": 0
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wallet_txes",
+  "info": {
+    "singularName": "wallet-tx",
+    "pluralName": "wallet-txes",
+    "displayName": "wallet-tx"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subscription-plan.subscription-plan",
+      "inversedBy": "wallet_txes"
+    },
+    "tx_type": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "deposit",
+        "usdt_withdraw",
+        "subscription_buy",
+        "subscription_redeem",
+        "referral_reward",
+        "lottery_prize"
+      ]
+    },
+    "direction": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "in",
+        "out"
+      ]
+    },
+    "amountUSDT": {
+      "type": "decimal",
+      "required": true
+    },
+    "amountToken": {
+      "type": "decimal"
+    },
+    "txHash": {
+      "type": "string"
+    },
+    "Wallet_status": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": [
+        "pending",
+        "success",
+        "failed"
+      ]
+    },
+    "memo": {
+      "type": "string"
+    }
+  }
+}

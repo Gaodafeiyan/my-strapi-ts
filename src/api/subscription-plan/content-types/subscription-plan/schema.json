@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscription_plans",
+  "info": {
+    "singularName": "subscription-plan",
+    "pluralName": "subscription-plans",
+    "displayName": "subscription-plan认购档位"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "planCode": {
+      "type": "enumeration",
+      "enum": [
+        "PLAN500",
+        "PLAN1K",
+        "PLAN2K",
+        "PLAN5K"
+      ]
+    },
+    "principalUSDT": {
+      "type": "integer",
+      "required": true,
+      "unique": false
+    },
+    "boxes": {
+      "type": "integer",
+      "required": true
+    },
+    "cycle_days": {
+      "type": "integer",
+      "required": true
+    },
+    "staticPct": {
+      "type": "decimal",
+      "required": true
+    },
+    "referralPct": {
+      "type": "decimal",
+      "required": true
+    },
+    "tokenBonusPct": {
+      "type": "decimal",
+      "required": true
+    },
+    "maxPurchase": {
+      "type": "integer",
+      "required": true
+    },
+    "spinQuota": {
+      "type": "integer",
+      "required": true,
+      "default": 3
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "wallet_txes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::wallet-tx.wallet-tx",
+      "mappedBy": "user"
+    },
+    "subscription_order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::subscription-order.subscription-order",
+      "mappedBy": "plan"
+    }
+  }
+}
