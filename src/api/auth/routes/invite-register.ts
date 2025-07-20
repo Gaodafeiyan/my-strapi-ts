@@ -5,7 +5,6 @@ export default {
       path: '/auth/invite-register',
       handler: 'invite-register.register',
       config: {
-        policies: ['global::rateLimit'],
         auth: false,
       },
     },

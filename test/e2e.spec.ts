@@ -7,16 +7,24 @@ describe('Investment Platform E2E Tests', () => {
 
   beforeAll(async () => {
     // 清理测试数据
-    await strapi.entityService.deleteMany('plugin::users-permissions.user', {
+    const testUsers = await strapi.entityService.findMany('plugin::users-permissions.user', {
       filters: { email: { $contains: 'test' } } as any,
     });
+    
+    for (const user of testUsers) {
+      await strapi.entityService.delete('plugin::users-permissions.user', user.id);
+    }
   });
 
   afterAll(async () => {
     // 清理测试数据
-    await strapi.entityService.deleteMany('plugin::users-permissions.user', {
+    const testUsers = await strapi.entityService.findMany('plugin::users-permissions.user', {
       filters: { email: { $contains: 'test' } } as any,
     });
+    
+    for (const user of testUsers) {
+      await strapi.entityService.delete('plugin::users-permissions.user', user.id);
+    }
   });
 
   it('should complete full investment flow', async () => {
@@ -68,7 +76,7 @@ describe('Investment Platform E2E Tests', () => {
       data: {
         user: userB.id,
         plan: plan[0].id,
-        principal: 500,
+        principalUSDT: 500,
         state: 'active',
         startAt: new Date(),
         endAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30天后
@@ -109,6 +117,6 @@ describe('Investment Platform E2E Tests', () => {
 
     // 验证推荐奖励记录
     expect(referralRewards).toHaveLength(1);
-    expect(referralRewards[0].amount).toBe(30);
+    expect(referralRewards[0].amountUSDT).toBe(30);
   });
 }); 
