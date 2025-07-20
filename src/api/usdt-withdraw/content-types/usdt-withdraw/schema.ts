@@ -33,7 +33,7 @@ export default {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'usdtWithdraws',
+      inversedBy: 'usdt-withdraws',
     },
   },
 }; 

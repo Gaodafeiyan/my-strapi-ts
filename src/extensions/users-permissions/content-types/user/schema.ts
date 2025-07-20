@@ -91,13 +91,13 @@ export default {
       target: 'api::subscription-order.subscription-order',
       mappedBy: 'user',
     },
-    referralRewards: {
+    'referral-rewards': {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::referral-reward.referral-reward',
       mappedBy: 'referrer',
     },
-    usdtWithdraws: {
+    'usdt-withdraws': {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::usdt-withdraw.usdt-withdraw',
