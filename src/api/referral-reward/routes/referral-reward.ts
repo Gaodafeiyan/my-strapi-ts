@@ -9,7 +9,7 @@ export default {
     {
       method: 'GET',
       path: '/referral-rewards/my',
-      handler: 'referral-reward.findMy',
+      handler: 'referral-reward.findMine',
       config: {
         policies: ['plugin::users-permissions.isAuthenticated']
       },
