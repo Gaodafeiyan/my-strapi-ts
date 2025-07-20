@@ -19,11 +19,10 @@ export default {
   async getAddr(ctx) {
     const userId = ctx.state.user.id;
     
-    // 这里可以返回用户的充值地址
-    // 暂时返回一个模拟地址
+    // 返回BEP20 BSC网络的充值地址
     return {
-      address: 'TRC20_USDT_ADDRESS_HERE',
-      network: 'TRC20',
+      address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+      network: 'BEP20',
       memo: `User_${userId}`,
     };
   },
