@@ -8,7 +8,7 @@ export default factories.createCoreController('api::referral-reward.referral-rew
     try {
       const rewards = await strapi.query('api::referral-reward.referral-reward').findMany({
         where: { referrer: userId },
-        populate: ['fromUser', 'fromOrder'],
+        populate: ['invitee', 'fromOrder'],
         orderBy: { createdAt: 'desc' },
       });
       return { data: rewards };

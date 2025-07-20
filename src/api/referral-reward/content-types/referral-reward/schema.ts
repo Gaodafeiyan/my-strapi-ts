@@ -15,9 +15,10 @@ export default {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',
-      inversedBy: 'referral-rewards',
+      inversedBy: 'referralRewards',
+      required: true,
     },
-    fromUser: {
+    invitee: {
       type: 'relation',
       relation: 'manyToOne',
       target: 'plugin::users-permissions.user',

@@ -91,7 +91,8 @@ export default {
       target: 'api::subscription-order.subscription-order',
       mappedBy: 'user',
     },
-    'referral-rewards': {
+
+    referralRewards: {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::referral-reward.referral-reward',
