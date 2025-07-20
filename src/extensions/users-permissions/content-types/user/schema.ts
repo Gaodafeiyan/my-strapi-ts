@@ -51,15 +51,15 @@ export default {
       type: 'uid',
       required: true,
       unique: true,
-      minLength: 10,
-      maxLength: 10,
+      minLength: 9,
+      maxLength: 9,
     },
     referralCode: {
       type: 'uid',
       required: true,
       unique: true,
-      minLength: 8,
-      maxLength: 8,
+      minLength: 9,
+      maxLength: 9,
     },
     invitedBy: {
       type: 'relation',
@@ -73,6 +73,25 @@ export default {
       target: 'plugin::users-permissions.user',
       mappedBy: 'invitedBy',
     },
+    totalInviteEarningUSDT: {
+      type: 'decimal',
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    totalStaticEarningUSDT: {
+      type: 'decimal',
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    walletBalanceUSDT: {
+      type: 'decimal',
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    // 关系字段
     'wallet-balance': {
       type: 'relation',
       relation: 'oneToOne',
@@ -91,8 +110,7 @@ export default {
       target: 'api::subscription-order.subscription-order',
       mappedBy: 'user',
     },
-
-    referralRewards: {
+    'referral-rewards': {
       type: 'relation',
       relation: 'oneToMany',
       target: 'api::referral-reward.referral-reward',

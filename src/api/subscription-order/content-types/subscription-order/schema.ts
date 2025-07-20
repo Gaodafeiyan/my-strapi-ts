@@ -11,11 +11,12 @@ export default {
     draftAndPublish: false,
   },
   attributes: {
-    plan: {
-      type: 'relation',
-      relation: 'manyToOne',
-      target: 'api::subscription-plan.subscription-plan',
-      inversedBy: 'orders',
+    orderNo: {
+      type: 'uid',
+      required: true,
+      unique: true,
+      minLength: 12,
+      maxLength: 12,
     },
     user: {
       type: 'relation',
@@ -23,16 +24,37 @@ export default {
       target: 'plugin::users-permissions.user',
       inversedBy: 'subscription-orders',
     },
-    state: {
-      type: 'enumeration',
-      enum: ['active', 'finished'],
-      required: true,
-      default: 'active',
+    plan: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'api::subscription-plan.subscription-plan',
+      inversedBy: 'orders',
     },
-    principal: {
+    principalUSDT: {
       type: 'decimal',
       required: true,
       min: 0,
+    },
+    staticYieldUSDT: {
+      type: 'decimal',
+      required: true,
+      min: 0,
+    },
+    tokenBonusAmount: {
+      type: 'decimal',
+      required: true,
+      min: 0,
+    },
+    cycleDays: {
+      type: 'integer',
+      required: true,
+      min: 1,
+    },
+    buyTxHash: {
+      type: 'string',
+    },
+    redeemTxHash: {
+      type: 'string',
     },
     startAt: {
       type: 'datetime',
@@ -42,26 +64,16 @@ export default {
       type: 'datetime',
       required: true,
     },
-    staticYieldAcc: {
-      type: 'decimal',
+    state: {
+      type: 'enumeration',
+      enum: ['draft', 'active', 'due', 'redeemed', 'cancelled'],
       required: true,
-      default: 0,
-      min: 0,
+      default: 'draft',
     },
-    aiTokenQty: {
-      type: 'decimal',
+    spinQuotaGranted: {
+      type: 'boolean',
       required: true,
-      default: 0,
-      min: 0,
-    },
-    spinQuota: {
-      type: 'integer',
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    redeemedAt: {
-      type: 'datetime',
+      default: false,
     },
   },
 }; 

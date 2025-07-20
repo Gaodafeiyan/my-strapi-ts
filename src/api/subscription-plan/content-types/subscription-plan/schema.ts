@@ -12,16 +12,22 @@ export default {
   },
   attributes: {
     code: {
-      type: 'string',
+      type: 'enumeration',
+      enum: ['PLAN500', 'PLAN1K', 'PLAN2K', 'PLAN5K'],
       required: true,
       unique: true,
     },
-    principal: {
+    principalUSDT: {
       type: 'decimal',
       required: true,
       min: 0,
     },
-    cycle: {
+    boxes: {
+      type: 'integer',
+      required: true,
+      min: 1,
+    },
+    cycleDays: {
       type: 'integer',
       required: true,
       min: 1,
@@ -30,15 +36,7 @@ export default {
       type: 'decimal',
       required: true,
       min: 0,
-    },
-    maxBuy: {
-      type: 'integer',
-      required: true,
-      min: 1,
-    },
-    unlockAfter: {
-      type: 'string',
-      required: true,
+      max: 100,
     },
     referralPct: {
       type: 'decimal',
@@ -46,11 +44,20 @@ export default {
       min: 0,
       max: 100,
     },
-    aiPct: {
+    tokenBonusPct: {
       type: 'decimal',
       required: true,
       min: 0,
       max: 100,
+    },
+    maxPurchase: {
+      type: 'integer',
+      required: true,
+      min: 1,
+    },
+    unlockRule: {
+      type: 'text',
+      required: true,
     },
     spinQuota: {
       type: 'integer',

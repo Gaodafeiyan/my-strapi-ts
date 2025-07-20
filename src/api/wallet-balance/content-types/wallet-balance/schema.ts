@@ -11,29 +11,23 @@ export default {
     draftAndPublish: false,
   },
   attributes: {
-    usdt: {
-      type: 'decimal',
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    aiToken: {
-      type: 'decimal',
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    spinQuota: {
-      type: 'integer',
-      required: true,
-      default: 0,
-      min: 0,
-    },
     user: {
       type: 'relation',
       relation: 'oneToOne',
       target: 'plugin::users-permissions.user',
       inversedBy: 'wallet-balance',
+    },
+    usdtBalance: {
+      type: 'decimal',
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    aiTokenBalance: {
+      type: 'decimal',
+      required: true,
+      default: 0,
+      min: 0,
     },
   },
 }; 

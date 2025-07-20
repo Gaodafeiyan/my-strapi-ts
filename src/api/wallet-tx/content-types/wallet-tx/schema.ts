@@ -13,7 +13,7 @@ export default {
   attributes: {
     txType: {
       type: 'enumeration',
-      enum: ['deposit', 'withdraw', 'subscription', 'referral', 'aiToken'],
+      enum: ['deposit', 'usdt_withdraw', 'subscription_buy', 'subscription_redeem', 'referral_reward', 'lottery_prize', 'airdrop'],
       required: true,
     },
     direction: {
@@ -21,10 +21,28 @@ export default {
       enum: ['in', 'out'],
       required: true,
     },
-    amount: {
+    amountUSDT: {
       type: 'decimal',
       required: true,
       min: 0,
+    },
+    amountToken: {
+      type: 'decimal',
+      min: 0,
+    },
+    user: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'plugin::users-permissions.user',
+      inversedBy: 'wallet-txs',
+    },
+    relatedOrder: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'api::subscription-order.subscription-order',
+    },
+    txHash: {
+      type: 'string',
     },
     status: {
       type: 'enumeration',
@@ -32,14 +50,8 @@ export default {
       required: true,
       default: 'pending',
     },
-    meta: {
-      type: 'json',
-    },
-    user: {
-      type: 'relation',
-      relation: 'manyToOne',
-      target: 'plugin::users-permissions.user',
-      inversedBy: 'wallet-txs',
+    memo: {
+      type: 'text',
     },
   },
 }; 
