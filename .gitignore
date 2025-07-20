@@ -10,13 +10,23 @@ Icon
 .Trashes
 ._*
 
-
 ############################
 # Linux
 ############################
 
 *~
 
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
 ############################
 # Windows
@@ -30,7 +40,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-
+*.lnk
 
 ############################
 # Packages
@@ -60,7 +70,6 @@ $RECYCLE.BIN/
 *.out
 *.pid
 
-
 ############################
 # Logs and databases
 ############################
@@ -70,7 +79,6 @@ $RECYCLE.BIN/
 *.sql
 *.sqlite
 *.sqlite3
-
 
 ############################
 # Misc.
@@ -82,8 +90,6 @@ ssl
 nbproject
 public/uploads/*
 !public/uploads/.gitkeep
-.tsbuildinfo
-.eslintcache
 
 ############################
 # Node.js
@@ -95,21 +101,23 @@ pids
 logs
 results
 node_modules
-.node_history
+.node
 
-############################
-# Package managers
-############################
+# Coverage directory used by tools like istanbul
+coverage
 
-.yarn/*
-!.yarn/cache
-!.yarn/unplugged
-!.yarn/patches
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
-yarn-error.log
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+
+# Debug log from npm
+npm-debug.log
 
 ############################
 # Tests
@@ -124,8 +132,34 @@ coverage
 .env
 license.txt
 exports
-.strapi
+*.cache
 dist
 build
 .strapi-updater.json
-.strapi-cloud.json
+
+############################
+# Custom
+############################
+
+# Database files
+.tmp/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env.local
+.env.production
+.env.staging
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
