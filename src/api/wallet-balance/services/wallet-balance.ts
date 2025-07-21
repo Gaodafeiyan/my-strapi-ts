@@ -41,7 +41,7 @@ export async function addUSDT(userId: number, amt: number, meta: Partial<TxMeta>
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
       amountUSDT: Math.round(amt), // 确保金额是整数
-      Wallet_status: 'success',
+      wallet_status: 'success',
       memo: meta.description,
     } as any
   });
@@ -76,7 +76,7 @@ export async function addToken(userId: number, amt: number, meta: Partial<TxMeta
       tx_type: meta.type || 'deposit',
       direction: meta.direction || 'in',
       amountToken: Math.round(amt), // 确保金额是整数
-      Wallet_status: 'success',
+      wallet_status: 'success',
       memo: meta.description,
     } as any
   });

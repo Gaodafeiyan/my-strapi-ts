@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lottery_prizes",
+  "info": {
+    "singularName": "lottery-prize",
+    "pluralName": "lottery-prizes",
+    "displayName": "lottery-prize"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "amountUSDT": {
+      "type": "decimal",
+      "required": true
+    },
+    "weight": {
+      "type": "integer",
+      "required": true
+    },
+    "stock": {
+      "type": "integer",
+      "default": -1
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+} 

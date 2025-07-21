@@ -32,21 +32,16 @@ export default {
     const { userId, amount } = ctx.request.body;
     
     try {
-      // 这里应该检查管理员权限，暂时跳过
-      console.log(`🔧 管理员充值: 用户${userId} +${amount} USDT`);
-      
       const newBalance = await addUSDT(userId, amount, {
         type: 'admin_recharge',
         direction: 'in',
         amount: amount,
         description: `Admin recharge ${amount} USDT`,
       });
-
-      return {
-        success: true,
-        newBalance: newBalance,
-        message: `Successfully recharged ${amount} USDT`
-      };
+      
+      console.log(`[WALLET] Admin recharge: user ${userId} +${amount} USDT`);
+      
+      return { success: true, newBalance };
     } catch (error) {
       return ctx.badRequest(error.message);
     }

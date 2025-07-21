@@ -1,5 +1,5 @@
 /**
- * referral-reward router
+ * lottery-spin router
  */
 
 import { factories } from '@strapi/strapi';
@@ -7,20 +7,20 @@ import { factories } from '@strapi/strapi';
 export default {
   routes: [
     {
-      method: 'GET',
-      path: '/referral-rewards',
-      handler: 'referral-reward.findMine',
+      method: 'POST',
+      path: '/lottery-spins/spin',
+      handler: 'lottery-spin.spin',
       config: {
         policies: ['global::isAuthenticated']
       },
     },
     {
       method: 'GET',
-      path: '/referral-rewards/my',
-      handler: 'referral-reward.findMine',
+      path: '/lottery-spins/my',
+      handler: 'lottery-spin.findMy',
       config: {
         policies: ['global::isAuthenticated']
       },
     },
   ],
-};
+}; 

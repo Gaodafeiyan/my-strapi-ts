@@ -23,24 +23,15 @@
     },
     "plan": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::subscription-plan.subscription-plan",
-      "inversedBy": "subscription_order"
+      "relation": "manyToOne",
+      "target": "api::subscription-plan.subscription-plan"
     },
     "principalUSDT": {
       "type": "decimal",
       "required": true
     },
-    "staticYieldUSDT": {
-      "type": "decimal",
-      "default": 0
-    },
     "tokenBonusAmount": {
       "type": "decimal"
-    },
-    "cycleDays": {
-      "type": "integer",
-      "required": true
     },
     "state": {
       "type": "enumeration",
@@ -48,9 +39,7 @@
       "enum": [
         "draft",
         "active",
-        "due",
-        "redeemed",
-        " cancelled"
+        "redeemed"
       ]
     },
     "startAt": {
@@ -65,11 +54,8 @@
       "type": "boolean",
       "default": false
     },
-    "referralRewards": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::referral-reward.referral-reward",
-      "mappedBy": "fromOrder"
+    "description": {
+      "type": "string"
     }
   }
 }

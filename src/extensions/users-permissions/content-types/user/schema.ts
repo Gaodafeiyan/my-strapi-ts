@@ -46,5 +46,31 @@ export default {
       inversedBy: 'users',
       configurable: false,
     },
+    diamondId: {
+      type: 'string',
+      unique: true,
+      required: true,
+      minLength: 9,
+      maxLength: 9,
+    },
+    referralCode: {
+      type: 'string',
+      unique: true,
+      required: true,
+      minLength: 9,
+      maxLength: 9,
+    },
+    invitedBy: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'plugin::users-permissions.user',
+      inversedBy: 'invitedUsers',
+    },
+    invitedUsers: {
+      type: 'relation',
+      relation: 'oneToMany',
+      target: 'plugin::users-permissions.user',
+      mappedBy: 'invitedBy',
+    },
   },
 }; 

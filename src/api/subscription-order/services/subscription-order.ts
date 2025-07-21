@@ -124,9 +124,9 @@ export async function processRedeem(order: any) {
     });
   }
 
-  // 处理推荐奖励（按档位不同比例）
+  // 处理推荐奖励（按被邀请人档位计算比例，按邀请人档位限制投资金额）
   if (order.user.invitedBy) {
-    const referralProfit = calculateReferralReward(plan.planCode, staticProfit);
+    const referralProfit = await calculateReferralRewardByInviterLevel(order.user.invitedBy, principal, staticProfit, plan.planCode);
     
     if (referralProfit > 0) {
       await addUSDT(order.user.invitedBy, referralProfit, {
@@ -143,6 +143,7 @@ export async function processRedeem(order: any) {
           fromUser: userId,
           order: order.id,
           amountUSDT: referralProfit,
+          staticProfit: staticProfit, // 添加静态收益
           description: `Referral reward from ${order.user.username} (${plan.planCode})`,
         } as any,
       });
@@ -159,24 +160,61 @@ export async function processRedeem(order: any) {
   });
 }
 
-// 计算推荐奖励（按档位不同比例）
-function calculateReferralReward(planCode: string, staticProfit: number): number {
-  switch (planCode) {
+// 计算推荐奖励（统一公式 - 只看邀请人档位）
+async function calculateReferralRewardByInviterLevel(inviterId: number, inviteePrincipal: number, inviteeStaticProfit: number, inviteePlanCode: string): Promise<number> {
+  // 1) 查邀请人最高档位
+  const inviterOrders = await strapi.entityService.findMany('api::subscription-order.subscription-order', {
+    filters: {
+      user: inviterId,
+      state: { $in: ['active', 'redeemed'] } // 只计算活跃和已赎回的订单
+    } as any,
+    populate: ['plan'],
+    sort: { principalUSDT: 'desc' }, // 按投资金额降序排列
+    limit: 1
+  });
+
+  if (!inviterOrders || inviterOrders.length === 0) {
+    return 0; // 邀请人没有投资记录，不获得奖励
+  }
+
+  const inviterOrder = inviterOrders[0] as any;
+  const inviterPlanCode = inviterOrder.plan.planCode;
+  const inviterPrincipal = inviterOrder.principalUSDT;
+
+  // 2) 根据邀请人档位确定收益率和返佣比例
+  let inviterStaticRate = 0;
+  let inviterReferralRate = 0;
+  
+  switch (inviterPlanCode) {
     case 'PLAN500':
-      return staticProfit; // 100% 推荐奖励
+      inviterStaticRate = 0.06; // 6%
+      inviterReferralRate = 1.0; // 100%
+      break;
     case 'PLAN1K':
-      return Math.round(staticProfit * 0.9); // 90% 推荐奖励
+      inviterStaticRate = 0.07; // 7%
+      inviterReferralRate = 0.9; // 90%
+      break;
     case 'PLAN2K':
-      return Math.round(staticProfit * 0.8); // 80% 推荐奖励
+      inviterStaticRate = 0.08; // 8%
+      inviterReferralRate = 0.8; // 80%
+      break;
     case 'PLAN5K':
-      return Math.round(staticProfit * 0.7); // 70% 推荐奖励
+      inviterStaticRate = 0.10; // 10%
+      inviterReferralRate = 0.7; // 70%
+      break;
     default:
       return 0;
   }
+
+  // 3) 计算推荐奖励：min(被邀请人本金, 邀请人本金) × 邀请人静态收益率 × 邀请人返佣比例
+  const limitedPrincipal = Math.min(inviteePrincipal, inviterPrincipal);
+  const referralReward = Math.round(limitedPrincipal * inviterStaticRate * inviterReferralRate);
+
+  return referralReward;
 }
 
 // 添加AI Token到用户钱包
-async function addAIToken(userId: number, amount: number, txData: any) {
+export async function addAIToken(userId: number, amount: number, txData: any) {
   // 更新用户钱包的AI Token余额
   const wallet = await strapi.entityService.findMany('api::wallet-balance.wallet-balance', {
     filters: { user: userId } as any,
@@ -199,6 +237,7 @@ async function addAIToken(userId: number, amount: number, txData: any) {
       direction: 'in',
       amountUSDT: 0,
       amountToken: amount,
+      wallet_status: 'success',
       memo: txData.description,
     } as any,
   });

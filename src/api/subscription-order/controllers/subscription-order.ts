@@ -6,9 +6,6 @@ import { createOrder, findMyOrders, redeemOrder } from '../services/subscription
 
 export default {
   async create(ctx) {
-    console.log('🔍 subscription-order.create - 用户信息:', ctx.state.user);
-    console.log('🔍 请求体:', ctx.request.body);
-    
     const { planCode } = ctx.request.body;
     const userId = ctx.state.user.id;
 

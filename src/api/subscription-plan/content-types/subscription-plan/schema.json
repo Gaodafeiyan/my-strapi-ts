@@ -40,18 +40,6 @@
     "enabled": {
       "type": "boolean",
       "default": true
-    },
-    "wallet_txes": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::wallet-tx.wallet-tx",
-      "mappedBy": "user"
-    },
-    "subscription_order": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::subscription-order.subscription-order",
-      "mappedBy": "plan"
     }
   }
 }

@@ -15,16 +15,11 @@ export default {
     }
 
     // 获取authenticated角色ID
-    console.log('🔍 查找authenticated角色...');
     const authenticatedRole = await strapi.entityService.findMany('plugin::users-permissions.role', {
       filters: { name: 'authenticated' }
     });
 
-    console.log('🔍 找到的角色:', authenticatedRole);
-
     if (!authenticatedRole || authenticatedRole.length === 0) {
-      console.log('❌ 未找到authenticated角色，尝试创建...');
-      
       // 尝试创建默认角色
       try {
         const defaultRole = await strapi.entityService.create('plugin::users-permissions.role', {
@@ -35,16 +30,13 @@ export default {
             permissions: {} as any
           }
         });
-        console.log('✅ 创建了默认authenticated角色:', defaultRole.id);
         
         // 重新获取角色
         const newRole = await strapi.entityService.findMany('plugin::users-permissions.role', {
           filters: { name: 'authenticated' }
         });
         
-        if (newRole && newRole.length > 0) {
-          console.log('✅ 找到新创建的authenticated角色:', newRole[0].id);
-        } else {
+        if (!newRole || newRole.length === 0) {
           return ctx.badRequest('Failed to create authenticated role');
         }
       } catch (error) {
@@ -62,8 +54,6 @@ export default {
       return ctx.badRequest('Authenticated role not found');
     }
 
-    console.log('✅ 使用角色ID:', role[0].id);
-
     // 创建用户
     const userData = {
       email,
@@ -78,8 +68,6 @@ export default {
       const user = await strapi.entityService.create('plugin::users-permissions.user', {
         data: userData,
       });
-
-      console.log('✅ 用户创建成功:', user.id);
 
       // 建立邀请关系
       if (inviteCode) {
@@ -100,20 +88,114 @@ export default {
         id: user.id,
       });
 
+      // 重新获取用户数据以确保包含新字段
+      const updatedUser = await strapi.entityService.findOne('plugin::users-permissions.user', user.id, {
+        populate: ['role']
+      }) as any;
+
       return {
         jwt,
         user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          diamondId: (user as any).diamondId,
-          referralCode: (user as any).referralCode,
+          id: updatedUser.id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          diamondId: updatedUser.diamondId,
+          referralCode: updatedUser.referralCode,
+          invitedBy: updatedUser.invitedBy,
           role: 'authenticated',
         }
       };
     } catch (error) {
       console.log('❌ 用户创建失败:', error.message);
       return ctx.badRequest('Registration failed', { error: error.message });
+    }
+  },
+
+  // 获取我的邀请码
+  async getMyInviteCode(ctx) {
+    const userId = ctx.state.user.id;
+    
+    try {
+      const user = await strapi.entityService.findOne('plugin::users-permissions.user', userId, {
+        fields: ['id', 'username', 'referralCode', 'diamondId'] as any
+      }) as any;
+
+      if (!user) {
+        return ctx.notFound('User not found');
+      }
+
+      return {
+        referralCode: user.referralCode,
+        diamondId: user.diamondId,
+        username: user.username,
+        inviteUrl: `https://yourdomain.com/register?code=${user.referralCode}`,
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${user.referralCode}`
+      };
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  // 获取邀请统计
+  async getInviteStats(ctx) {
+    const userId = ctx.state.user.id;
+    
+    try {
+      // 获取被邀请的用户数量
+      const invitedUsers = await strapi.entityService.findMany('plugin::users-permissions.user', {
+        filters: { invitedBy: userId } as any,
+        fields: ['id', 'username', 'createdAt']
+      });
+
+      // 获取推荐奖励总额
+      const referralRewards = await strapi.entityService.findMany('api::referral-reward.referral-reward', {
+        filters: { referrer: userId } as any,
+        fields: ['amountUSDT', 'createdAt']
+      });
+
+      const totalRewards = referralRewards.reduce((sum, reward) => sum + reward.amountUSDT, 0);
+      const todayRewards = referralRewards
+        .filter(reward => {
+          const today = new Date();
+          const rewardDate = new Date(reward.createdAt);
+          return rewardDate.toDateString() === today.toDateString();
+        })
+        .reduce((sum, reward) => sum + reward.amountUSDT, 0);
+
+      return {
+        totalInvites: invitedUsers.length,
+        totalRewards: totalRewards,
+        todayRewards: todayRewards,
+        invitedUsers: invitedUsers.map(user => ({
+          id: user.id,
+          username: user.username,
+          joinDate: user.createdAt
+        }))
+      };
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  // 获取邀请人列表
+  async getInvitedUsers(ctx) {
+    const userId = ctx.state.user.id;
+    const { page = 1, pageSize = 10 } = ctx.query;
+    
+    try {
+      const invitedUsers = await strapi.entityService.findMany('plugin::users-permissions.user', {
+        filters: { invitedBy: userId } as any,
+        fields: ['id', 'username', 'createdAt', 'diamondId'] as any,
+        sort: { createdAt: 'desc' },
+        pagination: {
+          page: parseInt(page),
+          pageSize: parseInt(pageSize)
+        }
+      });
+
+      return invitedUsers;
+    } catch (error) {
+      return ctx.badRequest(error.message);
     }
   }
 }; 

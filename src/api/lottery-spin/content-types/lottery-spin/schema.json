@@ -1,32 +1,44 @@
 {
   "kind": "collectionType",
-  "collectionName": "referral_rewards",
+  "collectionName": "lottery_spins",
   "info": {
-    "singularName": "referral-reward",
-    "pluralName": "referral-rewards",
-    "displayName": "referral-reward"
+    "singularName": "lottery-spin",
+    "pluralName": "lottery-spins",
+    "displayName": "lottery-spin"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "referrer": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user"
     },
-    "fromUser": {
+    "prize": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "plugin::users-permissions.user"
+      "target": "api::lottery-prize.lottery-prize"
     },
     "amountUSDT": {
       "type": "decimal",
       "required": true
     },
+    "costUSDT": {
+      "type": "decimal",
+      "required": true
+    },
+    "result": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "win",
+        "lose"
+      ]
+    },
     "description": {
       "type": "string"
     }
   }
-}
+} 

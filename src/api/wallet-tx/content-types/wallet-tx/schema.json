@@ -14,8 +14,7 @@
     "user": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::subscription-plan.subscription-plan",
-      "inversedBy": "wallet_txes"
+      "target": "plugin::users-permissions.user"
     },
     "tx_type": {
       "type": "enumeration",
@@ -26,7 +25,9 @@
         "subscription_buy",
         "subscription_redeem",
         "referral_reward",
-        "lottery_prize"
+        "lottery_prize",
+        "admin_recharge",
+        "usdt_withdraw_refund"
       ]
     },
     "direction": {
@@ -44,19 +45,10 @@
     "amountToken": {
       "type": "decimal"
     },
-    "txHash": {
+    "memo": {
       "type": "string"
     },
-    "Wallet_status": {
-      "type": "enumeration",
-      "default": "pending",
-      "enum": [
-        "pending",
-        "success",
-        "failed"
-      ]
-    },
-    "memo": {
+    "description": {
       "type": "string"
     }
   }

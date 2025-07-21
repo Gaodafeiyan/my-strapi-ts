@@ -14,8 +14,7 @@
     "user": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "withdraws"
+      "target": "plugin::users-permissions.user"
     },
     "amountUSDT": {
       "type": "decimal",
@@ -36,9 +35,6 @@
         "approved",
         "rejected"
       ]
-    },
-    "txHash": {
-      "type": "string"
     },
     "rejectReason": {
       "type": "text"

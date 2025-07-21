@@ -14,9 +14,9 @@ export default {
       await strapi.entityService.create('api::wallet-balance.wallet-balance', {
         data: { user: userId, usdtBalance: 0, aiTokenBalance: 0 },
       });
-      console.log(`✅ 用户 ${userId} 钱包创建成功`);
+      console.log(`[USER] Wallet created for user ${userId}`);
     } catch (error) {
-      console.log('❌ 用户创建后处理失败:', error.message);
+      console.error('[USER] Failed to create wallet after user creation:', error.message);
     }
   },
 }; 
