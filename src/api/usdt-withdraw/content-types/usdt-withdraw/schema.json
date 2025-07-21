@@ -24,18 +24,27 @@
     "toAddress": {
       "type": "string"
     },
+    "network": {
+      "type": "string"
+    },
     "usdt_status": {
       "type": "enumeration",
       "required": false,
       "default": "pending",
       "enum": [
         "pending",
-        "success",
+        "approved",
         "rejected"
       ]
     },
     "txHash": {
       "type": "string"
+    },
+    "rejectReason": {
+      "type": "text"
+    },
+    "reviewedAt": {
+      "type": "datetime"
     }
   }
 }

@@ -102,9 +102,11 @@ export async function processRedeem(order: any) {
   // 计算静态收益（使用整数计算，避免浮点数精度问题）
   // 例如：500 * 6% = 500 * 6 / 100 = 30
   const staticProfit = Math.round(principal * plan.staticPct / 100);
-  const bonusToken = plan.tokenBonusPct || 0;
+  
+  // 计算AI Token奖励（整数计算）
+  const tokenBonusAmount = Math.round(principal * plan.tokenBonusPct / 100);
 
-  // 给用户添加收益
+  // 给用户添加静态收益
   await addUSDT(userId, staticProfit, {
     type: 'subscription_redeem',
     direction: 'in',
@@ -112,46 +114,92 @@ export async function processRedeem(order: any) {
     description: `Static profit from ${plan.planCode}`,
   });
 
-  // 添加奖励代币
-  if (bonusToken > 0) {
-    // 这里需要调用addToken，但我们需要先创建这个函数
-    // await addToken(userId, bonusToken, {
-    //   type: 'subscription_redeem',
-    //   direction: 'in',
-    //   amount: bonusToken,
-    //   description: `Bonus token from ${plan.planCode}`,
-    // });
-  }
-
-  // 处理推荐奖励（使用整数计算）
-  if (order.user.invitedBy) {
-    // 例如：30 * 10% = 30 * 10 / 100 = 3
-    const referralProfit = Math.round(staticProfit * plan.referralPct / 100);
-    
-    await addUSDT(order.user.invitedBy, referralProfit, {
-      type: 'referral_reward',
+  // 添加AI Token奖励到用户钱包
+  if (tokenBonusAmount > 0) {
+    await addAIToken(userId, tokenBonusAmount, {
+      type: 'subscription_redeem',
       direction: 'in',
-      amount: referralProfit,
-      description: `Referral reward from ${order.user.username}`,
-    });
-
-    // 创建推荐奖励记录
-    await strapi.entityService.create('api::referral-reward.referral-reward', {
-      data: {
-        referrer: order.user.invitedBy,
-        fromUser: userId,
-        order: order.id,
-        amountUSDT: referralProfit,
-        description: `Referral reward from ${order.user.username}`,
-      } as any,
+      amount: tokenBonusAmount,
+      description: `AI Token bonus from ${plan.planCode}`,
     });
   }
 
-  // 更新订单状态
+  // 处理推荐奖励（按档位不同比例）
+  if (order.user.invitedBy) {
+    const referralProfit = calculateReferralReward(plan.planCode, staticProfit);
+    
+    if (referralProfit > 0) {
+      await addUSDT(order.user.invitedBy, referralProfit, {
+        type: 'referral_reward',
+        direction: 'in',
+        amount: referralProfit,
+        description: `Referral reward from ${order.user.username} (${plan.planCode})`,
+      });
+
+      // 创建推荐奖励记录
+      await strapi.entityService.create('api::referral-reward.referral-reward', {
+        data: {
+          referrer: order.user.invitedBy,
+          fromUser: userId,
+          order: order.id,
+          amountUSDT: referralProfit,
+          description: `Referral reward from ${order.user.username} (${plan.planCode})`,
+        } as any,
+      });
+    }
+  }
+
+  // 更新订单状态，标记抽奖次数已发放
   await strapi.entityService.update('api::subscription-order.subscription-order', order.id, {
     data: {
       state: 'redeemed',
       spinQuotaGranted: true,
+      tokenBonusAmount: tokenBonusAmount,
+    } as any,
+  });
+}
+
+// 计算推荐奖励（按档位不同比例）
+function calculateReferralReward(planCode: string, staticProfit: number): number {
+  switch (planCode) {
+    case 'PLAN500':
+      return staticProfit; // 100% 推荐奖励
+    case 'PLAN1K':
+      return Math.round(staticProfit * 0.9); // 90% 推荐奖励
+    case 'PLAN2K':
+      return Math.round(staticProfit * 0.8); // 80% 推荐奖励
+    case 'PLAN5K':
+      return Math.round(staticProfit * 0.7); // 70% 推荐奖励
+    default:
+      return 0;
+  }
+}
+
+// 添加AI Token到用户钱包
+async function addAIToken(userId: number, amount: number, txData: any) {
+  // 更新用户钱包的AI Token余额
+  const wallet = await strapi.entityService.findMany('api::wallet-balance.wallet-balance', {
+    filters: { user: userId } as any,
+  });
+
+  if (wallet && wallet.length > 0) {
+    const userWallet = wallet[0];
+    const newBalance = userWallet.aiTokenBalance + amount;
+    
+    await strapi.entityService.update('api::wallet-balance.wallet-balance', userWallet.id, {
+      data: { aiTokenBalance: newBalance } as any,
+    });
+  }
+
+  // 创建钱包交易记录
+  await strapi.entityService.create('api::wallet-tx.wallet-tx', {
+    data: {
+      user: userId,
+      tx_type: 'subscription_redeem',
+      direction: 'in',
+      amountUSDT: 0,
+      amountToken: amount,
+      memo: txData.description,
     } as any,
   });
 }

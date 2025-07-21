@@ -23,6 +23,14 @@ export default {
       },
     },
     {
+      method: 'GET',
+      path: '/usdt-withdraws',
+      handler: 'usdt-withdraw.findAll',
+      config: {
+        policies: ['global::isAuthenticated']
+      },
+    },
+    {
       method: 'POST',
       path: '/usdt-withdraws/:id/confirm',
       handler: 'usdt-withdraw.confirm',
