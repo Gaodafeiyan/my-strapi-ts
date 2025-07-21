@@ -1,0 +1,16 @@
+{
+  "name": "strapi-api-tester",
+  "version": "1.0.0",
+  "description": "测试 Strapi 后端 API 接口的脚本",
+  "main": "test_all_apis.js",
+  "scripts": {
+    "test": "node test_all_apis.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "keywords": ["strapi", "api", "test", "backend"],
+  "author": "API Tester",
+  "license": "MIT"
+} 
