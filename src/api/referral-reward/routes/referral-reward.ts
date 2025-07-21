@@ -11,7 +11,7 @@ export default {
       path: '/referral-rewards/my',
       handler: 'referral-reward.findMine',
       config: {
-        policies: ['global::isAuthenticated']
+        policies: ['plugin::users-permissions.isAuthenticated']
       },
     },
   ],
