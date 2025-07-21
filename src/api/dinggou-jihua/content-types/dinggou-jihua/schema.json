@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dinggou_jihuas",
+  "info": {
+    "singularName": "dinggou-jihua",
+    "pluralName": "dinggou-jihuas",
+    "displayName": "认购计划"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "jihuaCode": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "benjinUSDT": {
+      "type": "decimal",
+      "required": true
+    },
+    "zhouQiTian": {
+      "type": "integer",
+      "required": true
+    },
+    "jingtaiBili": {
+      "type": "decimal",
+      "required": true
+    },
+    "aiBili": {
+      "type": "decimal",
+      "required": true
+    },
+    "choujiangCi": {
+      "type": "integer",
+      "default": 3
+    },
+    "kaiqi": {
+      "type": "boolean",
+      "default": true
+    },
+    "dingdanList": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dinggou-dingdan.dinggou-dingdan",
+      "mappedBy": "jihua"
+    }
+  }
+} 

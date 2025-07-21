@@ -1,22 +1,13 @@
-import { customAlphabet } from 'nanoid';
-const nanoid = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 9);
+import { nanoid } from 'nanoid';
 
 export default {
-  async beforeCreate(event) {
-    event.params.data.diamondId    = nanoid();
-    event.params.data.referralCode = nanoid();
+  beforeCreate(event) {
+    // 生成9位数字邀请码
+    event.params.data.yaoqingMa = nanoid(9);
   },
-  async afterCreate(event) {
-    const userId = event.result.id;
-    
-    try {
-      // 创建钱包余额
-      await strapi.entityService.create('api::wallet-balance.wallet-balance', {
-        data: { user: userId, usdtBalance: 0, aiTokenBalance: 0 },
-      });
-      console.log(`[USER] Wallet created for user ${userId}`);
-    } catch (error) {
-      console.error('[USER] Failed to create wallet after user creation:', error.message);
-    }
-  },
+  
+  afterCreate(event) {
+    // 创建用户钱包
+    strapi.service('api::qianbao-yue.qianbao-yue').getUserWallet(event.result.id);
+  }
 }; 

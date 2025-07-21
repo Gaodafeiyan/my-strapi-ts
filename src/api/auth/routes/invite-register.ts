@@ -3,34 +3,18 @@ export default {
     {
       method: 'POST',
       path: '/auth/invite-register',
-      handler: 'invite-register.register',
+      handler: 'invite-register.inviteRegister',
       config: {
-        auth: false,
-      },
+        auth: false
+      }
     },
     {
       method: 'GET',
-      path: '/auth/my-invite-code',
-      handler: 'invite-register.getMyInviteCode',
+      path: '/auth/verify-invite/:yaoqingMa',
+      handler: 'invite-register.verifyInviteCode',
       config: {
-        policies: ['global::isAuthenticated']
-      },
-    },
-    {
-      method: 'GET',
-      path: '/auth/invite-stats',
-      handler: 'invite-register.getInviteStats',
-      config: {
-        policies: ['global::isAuthenticated']
-      },
-    },
-    {
-      method: 'GET',
-      path: '/auth/invited-users',
-      handler: 'invite-register.getInvitedUsers',
-      config: {
-        policies: ['global::isAuthenticated']
-      },
-    },
-  ],
+        auth: false
+      }
+    }
+  ]
 }; 
